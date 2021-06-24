@@ -16,7 +16,7 @@ enable_language(ZIG)
 add_custom_target(main_custom
     BYPRODUCTS
     "${PROJECT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.a"
-    COMMAND ${CMAKE_ZIG_COMPILER} build-lib -target x86_64-freestanding -femit-bin="${PROJECT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.a" "${PROJECT_SOURCE_DIR}/apps/zig-build-lib/components/main/src/run.zig" "-I$<JOIN:$<TARGET_PROPERTY:muslc,INTERFACE_INCLUDE_DIRECTORIES>, -I>"
+    COMMAND ${CMAKE_ZIG_COMPILER} build-lib -target x86_64-freestanding -femit-bin="${PROJECT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.a" "${PROJECT_SOURCE_DIR}/apps/zig-build-lib/components/main/src/run.zig" "-I$<JOIN:$<TARGET_PROPERTY:main_object.instance.bin,INCLUDE_DIRECTORIES>, -I>"
     )
 
 add_library(main STATIC IMPORTED GLOBAL)

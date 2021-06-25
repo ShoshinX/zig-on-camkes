@@ -13,11 +13,22 @@ list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/apps/zig-build-lib/CMake")
 enable_language(ZIG)
 
 
+
+# Source of solution: https://cmake.org/pipermail/cmake/2019-August/069850.html
+# Seems to be an old and common problem
+list(APPEND dirs_include "-I$<JOIN:$<TARGET_PROPERTY:main_object.instance.bin,INCLUDE_DIRECTORIES>,$<SEMICOLON>-I>")
+
+#file(READ "${PROJECT_BINARY_DIR}/IncludeDirectories.txt" inc_dirs)
+
 add_custom_target(main_custom
     BYPRODUCTS
     "${PROJECT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.a"
-    COMMAND ${CMAKE_ZIG_COMPILER} build-lib -target x86_64-freestanding -femit-bin="${PROJECT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.a" "${PROJECT_SOURCE_DIR}/apps/zig-build-lib/components/main/src/run.zig" "-I$<JOIN:$<TARGET_PROPERTY:main_object.instance.bin,INCLUDE_DIRECTORIES>, -I>"
+    COMMAND ${CMAKE_ZIG_COMPILER} build-lib ${dirs_include} -target x86_64-freestanding -femit-bin=${PROJECT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.a "${PROJECT_SOURCE_DIR}/apps/zig-build-lib/components/main/src/run.zig" 
+    COMMAND_EXPAND_LISTS
     )
+
+
+file(GENERATE OUTPUT "IncludeMuslcDirectories.txt" CONTENT "$<TARGET_PROPERTY:main_object.instance.bin,INCLUDE_DIRECTORIES>")
 
 add_library(main STATIC IMPORTED GLOBAL)
 set_property(

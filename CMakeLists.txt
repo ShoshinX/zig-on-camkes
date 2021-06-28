@@ -6,10 +6,10 @@
 
 cmake_minimum_required(VERSION 3.7.2)
 
-project(zig-build-lib C)
+project(zig-on-camkes C)
 
 
-list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/apps/zig-build-lib/CMake")
+list(APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/apps/zig-on-camkes/CMake")
 enable_language(ZIG)
 
 
@@ -23,12 +23,10 @@ list(APPEND dirs_include "-I$<JOIN:$<TARGET_PROPERTY:main_object.instance.bin,IN
 add_custom_target(main_custom
     BYPRODUCTS
     "${PROJECT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.a"
-    COMMAND ${CMAKE_ZIG_COMPILER} build-lib ${dirs_include} -target x86_64-freestanding -femit-bin=${PROJECT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.a "${PROJECT_SOURCE_DIR}/apps/zig-build-lib/components/main/src/run.zig" 
+    COMMAND ${CMAKE_ZIG_COMPILER} build-lib ${dirs_include} -target x86_64-freestanding -femit-bin=${PROJECT_BINARY_DIR}/${CMAKE_PROJECT_NAME}.a "${PROJECT_SOURCE_DIR}/apps/zig-on-camkes/components/main/src/run.zig" 
     COMMAND_EXPAND_LISTS
     )
 
-
-file(GENERATE OUTPUT "IncludeMuslcDirectories.txt" CONTENT "$<TARGET_PROPERTY:main_object.instance.bin,INCLUDE_DIRECTORIES>")
 
 add_library(main STATIC IMPORTED GLOBAL)
 set_property(
@@ -37,7 +35,7 @@ set_property(
 )
 add_dependencies(main main_custom)
 DeclareCAmkESComponent(main LIBS main)
-DeclareCAmkESRootserver(zig-build-lib.camkes)
+DeclareCAmkESRootserver(zig-on-camkes.camkes)
 
 
 add_simulate_test([=[wait_for "Hello, world!!"]=])
